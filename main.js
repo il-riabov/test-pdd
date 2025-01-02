@@ -60,34 +60,38 @@ const totalQuestions = questions.length;
             }
 
             const optionsContainer = document.getElementById("options");
-            optionsContainer.innerHTML = "";
+optionsContainer.innerHTML = "";
 
-            const shuffledOptions = shuffle(currentQuestion.options.map((option, index) => ({
-                text: option,
-                index: index
-            })));
+const shuffledOptions = shuffle(currentQuestion.options.map((option, index) => ({
+    text: option,
+    index: index
+})));
 
-            shuffledOptions.forEach(option => {
-                const button = document.createElement("button");
-                button.innerText = option.text;
-                button.addEventListener("click", () => {
-                    if (option.index === currentQuestion.correctAnswer) {
-                        button.classList.add("correct");
-                        correctCount++;
-                    } else {
-                        button.classList.add("incorrect");
-                        incorrectCount++;
-                        Array.from(optionsContainer.children).forEach((btn, idx) => {
-                            if (idx === currentQuestion.correctAnswer) {
-                                btn.classList.add("correct");
-                            }
-                        });
-                    }
-                    Array.from(optionsContainer.children).forEach(btn => btn.disabled = true);
-                    document.getElementById("next").style.display = "inline-block";
-                });
-                optionsContainer.appendChild(button);
+shuffledOptions.forEach(option => {
+    const button = document.createElement("button");
+    button.innerText = option.text;
+
+    button.addEventListener("click", () => {
+        if (option.index === currentQuestion.correctAnswer) {
+            button.classList.add("correct");
+            correctCount++;
+        } else {
+            button.classList.add("incorrect");
+            incorrectCount++;
+            Array.from(optionsContainer.children).forEach(btn => {
+                const btnOption = shuffledOptions.find(o => o.text === btn.innerText);
+                if (btnOption && btnOption.index === currentQuestion.correctAnswer) {
+                    btn.classList.add("correct");
+                }
             });
+        }
+
+        Array.from(optionsContainer.children).forEach(btn => btn.disabled = true);
+        document.getElementById("next").style.display = "inline-block";
+    });
+
+    optionsContainer.appendChild(button);
+});
 
             document.getElementById("skip").onclick = () => {
                 skippedQuestions.push(currentQuestion);
