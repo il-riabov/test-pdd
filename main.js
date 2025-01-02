@@ -1,3 +1,14 @@
+const preloadImages = () => {
+    questions.forEach(question => {
+        if (question.image) {
+            const img = new Image();
+            img.src = question.image;
+        }
+    });
+};
+
+preloadImages();
+
 const totalQuestions = questions.length;
         let currentQuestions = shuffle([...questions]);
         let skippedQuestions = [];
